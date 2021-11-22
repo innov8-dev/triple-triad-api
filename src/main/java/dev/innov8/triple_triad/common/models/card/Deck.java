@@ -13,39 +13,28 @@ import java.util.*;
 public class Deck {
 
     @Id
-    @Column(
-        name = "deck_id",
-        nullable = false,
-        unique = true,
-        columnDefinition = "VARCHAR CHECK deck_id <> '' AND CHAR_LENGTH(deck_id) = 36"
-    )
+    @Column(name = "deck_id", nullable = false, unique = true)
     private String id;
 
-    @Column(
-        name = "name",
-        nullable = false,
-        columnDefinition = "VARCHAR CHECK name <> ''"
-    )
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(
-        name = "owner_id",
-        nullable = false,
-        columnDefinition = "VARCHAR CHECK owner_id <> '' AND CHAR_LENGTH(owner_id) = 36"
-    )
+    @JoinColumn(name = "owner_id", nullable = false)
     private AppUser owner;
 
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "deck"
+    @OneToMany
+    @JoinTable(
+        name = "deck_cards",
+        joinColumns = @JoinColumn(name = "deck_id"),
+        inverseJoinColumns = @JoinColumn(name = "card_id")
     )
-    private List<Card> cards;
+    private Set<Card> cards;
 
     public Deck() {
         this.id = UUID.randomUUID().toString();
         this.owner = null;
-        this.cards = new ArrayList<>();
+        this.cards = new HashSet<>();
     }
 
     public Deck(String name) {
@@ -77,11 +66,11 @@ public class Deck {
         this.owner = owner;
     }
 
-    public List<Card> getCards() {
+    public Set<Card> getCards() {
         return cards;
     }
 
-    public void setCards(List<Card> cards) {
+    public void setCards(Set<Card> cards) {
         this.cards = cards;
     }
 

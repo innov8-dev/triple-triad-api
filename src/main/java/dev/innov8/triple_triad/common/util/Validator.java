@@ -30,4 +30,8 @@ public class Validator {
         return true;
     }
 
+    public static boolean isValidId(String id) {
+        return !isNullOrEmpty(id) && id.length() == 36;
+    }
+
 }

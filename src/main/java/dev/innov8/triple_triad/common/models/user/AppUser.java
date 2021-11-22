@@ -13,23 +13,23 @@ public class AppUser {
     @Column(name = "user_id", nullable = false, unique = true)
     private String id;
 
-    @Column(name = "first_name", nullable = false, columnDefinition = "VARCHAR CHECK first_name <> ''")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, columnDefinition = "VARCHAR CHECK last_name <> ''")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR CHECK email <> ''")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR CHECK username <> ''")
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR CHECK password <> ''")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private boolean accountActivated;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
@@ -82,12 +82,12 @@ public class AppUser {
         this.password = password;
     }
 
-    public boolean isAccountActivated() {
-        return accountActivated;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setAccountActivated(boolean accountActivated) {
-        this.accountActivated = accountActivated;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public AccountType getAccountType() {
@@ -103,12 +103,19 @@ public class AppUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppUser appUser = (AppUser) o;
-        return accountActivated == appUser.accountActivated && Objects.equals(id, appUser.id) && Objects.equals(firstName, appUser.firstName) && Objects.equals(lastName, appUser.lastName) && Objects.equals(email, appUser.email) && Objects.equals(username, appUser.username) && Objects.equals(password, appUser.password) && accountType == appUser.accountType;
+        return isActive == appUser.isActive &&
+                Objects.equals(id, appUser.id) &&
+                Objects.equals(firstName, appUser.firstName) &&
+                Objects.equals(lastName, appUser.lastName) &&
+                Objects.equals(email, appUser.email) &&
+                Objects.equals(username, appUser.username) &&
+                Objects.equals(password, appUser.password) &&
+                accountType == appUser.accountType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, accountActivated, accountType);
+        return Objects.hash(id, firstName, lastName, email, username, password, isActive, accountType);
     }
 
     @Override
@@ -118,7 +125,7 @@ public class AppUser {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
-                ", accountActivated=" + accountActivated +
+                ", isActive=" + isActive +
                 ", accountType=" + accountType +
                 '}';
     }
