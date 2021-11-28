@@ -1,5 +1,6 @@
 package dev.innov8.triple_triad.common.models.card;
 
+import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.models.user.AppUser;
 
 import javax.persistence.*;
@@ -7,11 +8,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "cards")
-public class Card {
-
-    @Id
-    @Column(name = "card_id", nullable = false, unique = true)
-    private String id;
+public class Card extends Resource {
 
     @ManyToOne
     @JoinColumn(name = "creature_id")
@@ -21,7 +18,7 @@ public class Card {
     @JoinColumn(name = "owner_id", nullable = false)
     private AppUser owner;
 
-    protected Card() {
+    public Card() {
         super();
     }
 
@@ -31,16 +28,20 @@ public class Card {
         this.owner = owner;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public Creature getCreature() {
         return creature;
     }
 
+    public void setCreature(Creature creature) {
+        this.creature = creature;
+    }
+
     public AppUser getOwner() {
         return owner;
+    }
+
+    public void setOwner(AppUser owner) {
+        this.owner = owner;
     }
 
     @Override

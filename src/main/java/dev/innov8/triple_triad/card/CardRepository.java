@@ -4,24 +4,22 @@ import dev.innov8.triple_triad.common.models.card.Card;
 import dev.innov8.triple_triad.common.models.card.Element;
 import dev.innov8.triple_triad.common.models.card.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
+import java.util.Set;
 
 public interface CardRepository extends JpaRepository<Card, String> {
 
-    List<Card> findCardsByCreatureName(String name);
-    List<Card> findCardsByCreatureLevel(int level);
-    List<Card> findCardsByCreatureType(Type type);
-    List<Card> findCardsByCreatureElement(Element element);
-    List<Card> findCardsByCreatureTopRank(int rankValue);
-    List<Card> findCardsByCreatureRightRank(int rankValue);
-    List<Card> findCardsByCreatureBottomRank(int rankValue);
-    List<Card> findCardsByCreatureLeftRank(int rankValue);
-    List<Card> findCardsByCreatureTopRankGreaterThanEqual(int rankValue);
-    List<Card> findCardsByCreatureRightRankGreaterThanEqual(int rankValue);
-    List<Card> findCardsByCreatureBottomRankGreaterThanEqual(int rankValue);
-    List<Card> findCardsByCreatureLeftRankGreaterThanEqual(int rankValue);
-    List<Card> findCardsByOwnerId(String ownerId);
+    Set<Card> findCardsByCreatureName(String name);
+    Set<Card> findCardsByCreatureLevel(int level);
+    Set<Card> findCardsByCreatureType(Type type);
+    Set<Card> findCardsByCreatureElement(Element element);
+    Set<Card> findCardsByCreatureTopRank(int rankValue);
+    Set<Card> findCardsByCreatureRightRank(int rankValue);
+    Set<Card> findCardsByCreatureBottomRank(int rankValue);
+    Set<Card> findCardsByCreatureLeftRank(int rankValue);
+    Set<Card> findCardsByCreatureTopRankGreaterThanEqual(int rankValue);
+    Set<Card> findCardsByCreatureRightRankGreaterThanEqual(int rankValue);
+    Set<Card> findCardsByCreatureBottomRankGreaterThanEqual(int rankValue);
+    Set<Card> findCardsByCreatureLeftRankGreaterThanEqual(int rankValue);
+    Set<Card> findCardsByOwnerId(String ownerId);
 
 }

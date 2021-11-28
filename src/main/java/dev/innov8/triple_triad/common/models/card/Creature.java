@@ -1,17 +1,13 @@
 package dev.innov8.triple_triad.common.models.card;
 
+import dev.innov8.triple_triad.common.models.Resource;
+
 import javax.persistence.*;
 import java.util.UUID;
 
-import static dev.innov8.triple_triad.common.util.Validator.isNull;
-import static dev.innov8.triple_triad.common.util.Validator.isNullOrEmpty;
 
 @Entity(name = "creatures")
-public class Creature {
-
-    @Id
-    @Column(name = "creature_id", nullable = false, unique = true)
-    private String id;
+public class Creature extends Resource {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -59,10 +55,6 @@ public class Creature {
         this.level = level;
         this.type = type;
         this.element = element;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -175,8 +167,8 @@ public class Creature {
         }
 
         public Creature build() {
-            if (isNullOrEmpty(id)) id = UUID.randomUUID().toString();
-            if (isNull(element)) element = Element.NONE;
+            if (id == null || id.isEmpty()) id = UUID.randomUUID().toString();
+            if (element == null) element = Element.NONE;
             return new Creature(id, this.name, topRank, rightRank, bottomRank, leftRank, obverseImageUrl, reverseImageUrl, level, type, element);
         }
 

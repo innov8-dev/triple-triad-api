@@ -1,5 +1,6 @@
 package dev.innov8.triple_triad.common.models.card;
 
+import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.models.user.AppUser;
 
 import javax.persistence.*;
@@ -10,11 +11,7 @@ import java.util.*;
     name = "decks",
     uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "owner_id" }) }
 )
-public class Deck {
-
-    @Id
-    @Column(name = "deck_id", nullable = false, unique = true)
-    private String id;
+public class Deck extends Resource {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -40,14 +37,6 @@ public class Deck {
     public Deck(String name) {
         this();
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

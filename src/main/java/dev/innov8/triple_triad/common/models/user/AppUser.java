@@ -1,17 +1,13 @@
 package dev.innov8.triple_triad.common.models.user;
 
+import dev.innov8.triple_triad.common.models.Resource;
+
 import javax.persistence.*;
 import java.util.Objects;
 
-// TODO: Review fields
-
 @Entity
 @Table(name = "app_users")
-public class AppUser {
-
-    @Id
-    @Column(name = "user_id", nullable = false, unique = true)
-    private String id;
+public class AppUser extends Resource {
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -33,14 +29,6 @@ public class AppUser {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
