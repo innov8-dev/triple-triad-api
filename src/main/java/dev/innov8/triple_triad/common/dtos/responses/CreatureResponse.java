@@ -1,6 +1,7 @@
 package dev.innov8.triple_triad.common.dtos.responses;
 
-import dev.innov8.triple_triad.common.models.card.Creature;
+import dev.innov8.triple_triad.common.models.card.AbstractCreature;
+import dev.innov8.triple_triad.common.models.card.Monster;
 import dev.innov8.triple_triad.common.web.ResourceResponse;
 
 public class CreatureResponse implements ResourceResponse {
@@ -11,19 +12,20 @@ public class CreatureResponse implements ResourceResponse {
     private int rightRank;
     private int bottomRank;
     private int leftRank;
-    private String obverseImageUrl;
+    private String imageUrl;
     private int level;
     private String type;
     private String element;
 
-    public CreatureResponse(Creature creature) {
+    public CreatureResponse(AbstractCreature creature) {
+        System.out.println(creature);
         this.creatureId = creature.getId();
         this.name = creature.getName();
         this.topRank = creature.getTopRank();
         this.rightRank = creature.getRightRank();
         this.bottomRank = creature.getBottomRank();
         this.leftRank = creature.getLeftRank();
-        this.obverseImageUrl = creature.getObverseImageUrl();
+        this.imageUrl = creature.getImageUrl();
         this.level = creature.getLevel();
         this.type = creature.getType().toString();
         this.element = creature.getElement().toString();
@@ -77,12 +79,12 @@ public class CreatureResponse implements ResourceResponse {
         this.leftRank = leftRank;
     }
 
-    public String getObverseImageUrl() {
-        return obverseImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setObverseImageUrl(String obverseImageUrl) {
-        this.obverseImageUrl = obverseImageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public int getLevel() {
@@ -118,7 +120,7 @@ public class CreatureResponse implements ResourceResponse {
                 ", rightRank=" + rightRank +
                 ", bottomRank=" + bottomRank +
                 ", leftRank=" + leftRank +
-                ", obverseImageUrl='" + obverseImageUrl + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", level=" + level +
                 ", type='" + type + '\'' +
                 ", element='" + element + '\'' +

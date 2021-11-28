@@ -7,6 +7,8 @@ import dev.innov8.triple_triad.common.exceptions.ResourcePersistenceException;
 import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.services.ResourceService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,12 +42,12 @@ public class ResourceController<T extends Resource> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody @Valid AppRequest newObj) {
+    public void save(@RequestBody @Valid ResourceRequest newObj) {
         service.save(newObj);
     }
 
     @PatchMapping("/{id}")
-    public void update(@RequestBody @Valid AppRequest updatedObj) {
+    public void update(@RequestBody @Valid ResourceRequest updatedObj) {
         service.update(updatedObj);
     }
 
@@ -55,9 +57,9 @@ public class ResourceController<T extends Resource> {
         service.deleteById(id);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({InvalidRequestException.class, MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidRequestException(InvalidRequestException e) {
+    public ErrorResponse handleInvalidRequestException(Exception e) {
         return new ErrorResponse(400, e.getMessage());
     }
 
@@ -76,6 +78,7 @@ public class ResourceController<T extends Resource> {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleInternalServerException(Exception e) {
+        e.printStackTrace();
         return new ErrorResponse(500, e.getMessage());
     }
 

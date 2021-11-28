@@ -1,16 +1,15 @@
 package dev.innov8.triple_triad.common.util;
 
 import dev.innov8.triple_triad.common.dtos.requests.NewCreatureRequest;
-import dev.innov8.triple_triad.common.models.card.Creature;
 import dev.innov8.triple_triad.common.models.card.Type;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class LevelTypeConstraintValidator implements ConstraintValidator<LevelTypeConstraint, NewCreatureRequest> {
+public class CreatureLevelTypeValidator implements ConstraintValidator<ValidCreatureLevelType, NewCreatureRequest> {
 
     @Override
-    public boolean isValid(NewCreatureRequest creature, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(NewCreatureRequest creature, ConstraintValidatorContext validatorContext) {
 
         int level = creature.getLevel();
         Type type = creature.getType();

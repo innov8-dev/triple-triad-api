@@ -1,15 +1,12 @@
 package dev.innov8.triple_triad.creature;
 
-import dev.innov8.triple_triad.common.dtos.requests.NewCreatureRequest;
-import dev.innov8.triple_triad.common.models.card.Creature;
+import dev.innov8.triple_triad.common.models.card.Monster;
 import dev.innov8.triple_triad.common.services.ResourceService;
-import dev.innov8.triple_triad.common.util.EntitySearcher;
+import dev.innov8.triple_triad.common.data.EntitySearcher;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-
 @Service
-public class CreatureService extends ResourceService<Creature> {
+public class CreatureService extends ResourceService<Monster> {
 
     private final CreatureRepository creatureRepo;
 

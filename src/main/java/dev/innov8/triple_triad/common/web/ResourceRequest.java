@@ -11,6 +11,6 @@ import dev.innov8.triple_triad.common.dtos.requests.NewCreatureRequest;
         @JsonSubTypes.Type(NewCreatureRequest.class)
 }
 )
-public abstract class AppRequest<T> {
+public abstract class ResourceRequest<T> {
     public abstract T extract();
 }

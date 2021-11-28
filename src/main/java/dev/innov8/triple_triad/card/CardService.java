@@ -7,7 +7,7 @@ import dev.innov8.triple_triad.common.models.card.Card;
 import dev.innov8.triple_triad.common.models.card.Element;
 import dev.innov8.triple_triad.common.models.card.Type;
 import dev.innov8.triple_triad.common.services.ResourceService;
-import dev.innov8.triple_triad.common.util.EntitySearcher;
+import dev.innov8.triple_triad.common.data.EntitySearcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,19 +1,17 @@
 package dev.innov8.triple_triad.common.dtos.requests;
 
-import dev.innov8.triple_triad.common.models.card.Creature;
-import dev.innov8.triple_triad.common.models.card.Element;
-import dev.innov8.triple_triad.common.models.card.Type;
-import dev.innov8.triple_triad.common.util.LevelTypeConstraint;
+import dev.innov8.triple_triad.common.models.card.*;
+import dev.innov8.triple_triad.common.util.ValidCreatureLevelType;
 import dev.innov8.triple_triad.common.util.Url;
-import dev.innov8.triple_triad.common.web.AppRequest;
+import dev.innov8.triple_triad.common.web.ResourceRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@LevelTypeConstraint
-public class NewCreatureRequest extends AppRequest<Creature> {
+@ValidCreatureLevelType
+public class NewCreatureRequest extends ResourceRequest<Creature> {
 
     @NotBlank
     private String name;
@@ -134,13 +132,13 @@ public class NewCreatureRequest extends AppRequest<Creature> {
 
     @Override
     public Creature extract() {
-        return new Creature.CreatureBuilder()
+        return new CreatureBuilder()
                             .setName(name)
                             .setTopRank(topRank)
                             .setRightRank(rightRank)
                             .setBottomRank(bottomRank)
                             .setLeftRank(leftRank)
-                            .setObverseImageUrl(obverseImageUrl)
+                            .setImageUrl(obverseImageUrl)
                             .setType(type)
                             .setElement(element)
                             .build();
