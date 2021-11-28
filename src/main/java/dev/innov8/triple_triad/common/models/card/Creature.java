@@ -27,9 +27,6 @@ public class Creature extends Resource {
     @Column(name = "obverse_image_url", nullable = false)
     private String obverseImageUrl;
 
-    @Column(name = "reverse_image_url", nullable = false)
-    private String reverseImageUrl;
-
     @Column(name = "level", nullable = false)
     private int level;
 
@@ -43,7 +40,7 @@ public class Creature extends Resource {
         super();
     }
 
-    private Creature(String id, String name, int topRank, int rightRank, int bottomRank, int leftRank, String obverseImageUrl, String reverseImageUrl, int level, Type type, Element element) {
+    private Creature(String id, String name, int topRank, int rightRank, int bottomRank, int leftRank, String obverseImageUrl, int level, Type type, Element element) {
         this.id = id;
         this.name = name;
         this.topRank = topRank;
@@ -51,7 +48,6 @@ public class Creature extends Resource {
         this.bottomRank = bottomRank;
         this.leftRank = leftRank;
         this.obverseImageUrl = obverseImageUrl;
-        this.reverseImageUrl = reverseImageUrl;
         this.level = level;
         this.type = type;
         this.element = element;
@@ -81,10 +77,6 @@ public class Creature extends Resource {
         return obverseImageUrl;
     }
 
-    public String getReverseImageUrl() {
-        return reverseImageUrl;
-    }
-
     public int getLevel() {
         return level;
     }
@@ -106,7 +98,6 @@ public class Creature extends Resource {
         private int bottomRank;
         private int leftRank;
         private String obverseImageUrl;
-        private String reverseImageUrl;
         private int level;
         private Type type;
         private Element element;
@@ -146,11 +137,6 @@ public class Creature extends Resource {
             return this;
         }
 
-        public CreatureBuilder setReverseImageUrl(String reverseImageUrl) {
-            this.reverseImageUrl = reverseImageUrl;
-            return this;
-        }
-
         public CreatureBuilder setLevel(int level) {
             this.level = level;
             return this;
@@ -169,7 +155,7 @@ public class Creature extends Resource {
         public Creature build() {
             if (id == null || id.isEmpty()) id = UUID.randomUUID().toString();
             if (element == null) element = Element.NONE;
-            return new Creature(id, this.name, topRank, rightRank, bottomRank, leftRank, obverseImageUrl, reverseImageUrl, level, type, element);
+            return new Creature(id, this.name, topRank, rightRank, bottomRank, leftRank, obverseImageUrl, level, type, element);
         }
 
     }

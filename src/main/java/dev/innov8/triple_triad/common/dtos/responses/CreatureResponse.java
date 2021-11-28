@@ -1,6 +1,7 @@
 package dev.innov8.triple_triad.common.dtos.responses;
 
 import dev.innov8.triple_triad.common.models.card.Creature;
+import dev.innov8.triple_triad.common.web.ResourceResponse;
 
 public class CreatureResponse implements ResourceResponse {
 
@@ -11,7 +12,6 @@ public class CreatureResponse implements ResourceResponse {
     private int bottomRank;
     private int leftRank;
     private String obverseImageUrl;
-    private String reverseImageUrl;
     private int level;
     private String type;
     private String element;
@@ -24,7 +24,6 @@ public class CreatureResponse implements ResourceResponse {
         this.bottomRank = creature.getBottomRank();
         this.leftRank = creature.getLeftRank();
         this.obverseImageUrl = creature.getObverseImageUrl();
-        this.reverseImageUrl = creature.getReverseImageUrl();
         this.level = creature.getLevel();
         this.type = creature.getType().toString();
         this.element = creature.getElement().toString();
@@ -86,14 +85,6 @@ public class CreatureResponse implements ResourceResponse {
         this.obverseImageUrl = obverseImageUrl;
     }
 
-    public String getReverseImageUrl() {
-        return reverseImageUrl;
-    }
-
-    public void setReverseImageUrl(String reverseImageUrl) {
-        this.reverseImageUrl = reverseImageUrl;
-    }
-
     public int getLevel() {
         return level;
     }
@@ -128,7 +119,6 @@ public class CreatureResponse implements ResourceResponse {
                 ", bottomRank=" + bottomRank +
                 ", leftRank=" + leftRank +
                 ", obverseImageUrl='" + obverseImageUrl + '\'' +
-                ", reverseImageUrl='" + reverseImageUrl + '\'' +
                 ", level=" + level +
                 ", type='" + type + '\'' +
                 ", element='" + element + '\'' +

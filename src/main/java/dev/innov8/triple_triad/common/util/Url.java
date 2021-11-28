@@ -1,6 +1,7 @@
 package dev.innov8.triple_triad.common.util;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
@@ -8,4 +9,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Url {
+    String message() default "Invalid URL provided";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }

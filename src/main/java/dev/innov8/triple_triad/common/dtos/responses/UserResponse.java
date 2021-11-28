@@ -1,6 +1,7 @@
 package dev.innov8.triple_triad.common.dtos.responses;
 
 import dev.innov8.triple_triad.common.models.user.AppUser;
+import dev.innov8.triple_triad.common.web.ResourceResponse;
 
 public class UserResponse implements ResourceResponse {
 

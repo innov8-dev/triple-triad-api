@@ -1,7 +1,8 @@
 package dev.innov8.triple_triad.common.services;
 
-import dev.innov8.triple_triad.common.dtos.responses.ResourceResponse;
-import dev.innov8.triple_triad.common.dtos.responses.ResponseFactory;
+import dev.innov8.triple_triad.common.web.AppRequest;
+import dev.innov8.triple_triad.common.web.ResourceResponse;
+import dev.innov8.triple_triad.common.web.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.util.EntitySearcher;
@@ -53,12 +54,14 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
-    public void save(@Valid T newObj) {
+    public void save(@Valid AppRequest<T> saveRequest) {
+        T newObj = saveRequest.extract();
         newObj.setId(UUID.randomUUID().toString());
         repo.save(newObj);
     }
 
-    public void update(@Valid T updatedObj) {
+    public void update(@Valid AppRequest<T> updateRequest) {
+        T updatedObj = updateRequest.extract();
         repo.save(updatedObj);
     }
 

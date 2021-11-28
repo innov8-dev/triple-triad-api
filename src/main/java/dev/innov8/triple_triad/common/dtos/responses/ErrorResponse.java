@@ -1,5 +1,7 @@
 package dev.innov8.triple_triad.common.dtos.responses;
 
+import dev.innov8.triple_triad.common.web.ResourceResponse;
+
 import java.time.LocalDateTime;
 
 public class ErrorResponse implements ResourceResponse {

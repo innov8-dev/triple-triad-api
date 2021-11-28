@@ -18,14 +18,23 @@ public class Card extends Resource {
     @JoinColumn(name = "owner_id", nullable = false)
     private AppUser owner;
 
+    @Column(
+        name = "reverse_image_url",
+        nullable = false,
+        columnDefinition = "VARCHAR DEFAULT 'https://triple-triad-card-images.s3.amazonaws.com/card-reversed.png'"
+    )
+    private String reverseImageUrl;
+
     public Card() {
         super();
+        this.reverseImageUrl = "https://triple-triad-card-images.s3.amazonaws.com/card-reversed.png";
     }
 
     public Card(String id, Creature creature, AppUser owner) {
         this.id = id;
         this.creature = creature;
         this.owner = owner;
+        this.reverseImageUrl = "https://triple-triad-card-images.s3.amazonaws.com/card-reversed.png";
     }
 
     public Creature getCreature() {
@@ -44,25 +53,29 @@ public class Card extends Resource {
         this.owner = owner;
     }
 
+    public String getReverseImageUrl() {
+        return reverseImageUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return Objects.equals(id, card.id) && Objects.equals(creature, card.creature) && Objects.equals(owner, card.owner);
+        return Objects.equals(creature, card.creature) && Objects.equals(owner, card.owner) && Objects.equals(reverseImageUrl, card.reverseImageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, creature, owner);
+        return Objects.hash(creature, owner, reverseImageUrl);
     }
 
     @Override
     public String toString() {
         return "Card{" +
-                "id='" + id + '\'' +
-                ", creature=" + creature +
+                "creature=" + creature +
                 ", owner=" + owner +
+                ", reverseImageUrl='" + reverseImageUrl + '\'' +
                 '}';
     }
 

@@ -1,5 +1,9 @@
-package dev.innov8.triple_triad.common.dtos.responses;
+package dev.innov8.triple_triad.common.web;
 
+import dev.innov8.triple_triad.common.dtos.responses.CardResponse;
+import dev.innov8.triple_triad.common.dtos.responses.CreatureResponse;
+import dev.innov8.triple_triad.common.dtos.responses.ErrorResponse;
+import dev.innov8.triple_triad.common.dtos.responses.UserResponse;
 import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.models.card.Card;
 import dev.innov8.triple_triad.common.models.card.Creature;
