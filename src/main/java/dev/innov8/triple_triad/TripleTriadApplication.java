@@ -9,7 +9,6 @@ import java.util.UUID;
 public class TripleTriadApplication {
 
     public static void main(String[] args) {
-        System.out.println(UUID.randomUUID());
         SpringApplication.run(TripleTriadApplication.class, args);
     }
 
