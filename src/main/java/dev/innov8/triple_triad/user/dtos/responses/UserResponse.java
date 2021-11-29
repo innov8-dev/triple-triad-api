@@ -1,4 +1,4 @@
-package dev.innov8.triple_triad.common.dtos.responses;
+package dev.innov8.triple_triad.user.dtos.responses;
 
 import dev.innov8.triple_triad.common.models.user.AppUser;
 import dev.innov8.triple_triad.common.web.ResourceResponse;

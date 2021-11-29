@@ -1,13 +1,13 @@
 package dev.innov8.triple_triad.card;
 
-import dev.innov8.triple_triad.common.dtos.responses.CardResponse;
+import dev.innov8.triple_triad.card.dtos.responses.CardResponse;
 import dev.innov8.triple_triad.common.exceptions.InvalidRequestException;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.models.card.Card;
 import dev.innov8.triple_triad.common.models.card.Element;
 import dev.innov8.triple_triad.common.models.card.Type;
 import dev.innov8.triple_triad.common.services.ResourceService;
-import dev.innov8.triple_triad.common.data.EntitySearcher;
+import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

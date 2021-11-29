@@ -1,4 +1,4 @@
-package dev.innov8.triple_triad.common.data;
+package dev.innov8.triple_triad.common.datasource;
 
 import dev.innov8.triple_triad.common.exceptions.InvalidRequestException;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;

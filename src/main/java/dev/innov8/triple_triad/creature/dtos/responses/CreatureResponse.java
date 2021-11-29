@@ -1,7 +1,6 @@
-package dev.innov8.triple_triad.common.dtos.responses;
+package dev.innov8.triple_triad.creature.dtos.responses;
 
-import dev.innov8.triple_triad.common.models.card.AbstractCreature;
-import dev.innov8.triple_triad.common.models.card.Monster;
+import dev.innov8.triple_triad.common.models.card.Creature;
 import dev.innov8.triple_triad.common.web.ResourceResponse;
 
 public class CreatureResponse implements ResourceResponse {
@@ -17,8 +16,7 @@ public class CreatureResponse implements ResourceResponse {
     private String type;
     private String element;
 
-    public CreatureResponse(AbstractCreature creature) {
-        System.out.println(creature);
+    public CreatureResponse(Creature creature) {
         this.creatureId = creature.getId();
         this.name = creature.getName();
         this.topRank = creature.getTopRank();

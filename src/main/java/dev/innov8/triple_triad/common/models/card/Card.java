@@ -12,7 +12,7 @@ public class Card extends Resource {
 
     @ManyToOne
     @JoinColumn(name = "creature_id")
-    private Monster creature;
+    private Creature creature;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
@@ -30,18 +30,18 @@ public class Card extends Resource {
         this.reverseImageUrl = "https://triple-triad-card-images.s3.amazonaws.com/card-reversed.png";
     }
 
-    public Card(String id, Monster creature, AppUser owner) {
+    public Card(String id, Creature creature, AppUser owner) {
         this.id = id;
         this.creature = creature;
         this.owner = owner;
         this.reverseImageUrl = "https://triple-triad-card-images.s3.amazonaws.com/card-reversed.png";
     }
 
-    public Monster getCreature() {
+    public Creature getCreature() {
         return creature;
     }
 
-    public void setCreature(Monster creature) {
+    public void setCreature(Creature creature) {
         this.creature = creature;
     }
 

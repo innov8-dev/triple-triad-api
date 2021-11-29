@@ -5,7 +5,7 @@ import dev.innov8.triple_triad.common.web.ResourceResponse;
 import dev.innov8.triple_triad.common.web.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.models.Resource;
-import dev.innov8.triple_triad.common.data.EntitySearcher;
+import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.Valid;

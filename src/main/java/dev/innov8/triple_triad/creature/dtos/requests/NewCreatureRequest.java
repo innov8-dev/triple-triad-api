@@ -1,17 +1,15 @@
-package dev.innov8.triple_triad.common.dtos.requests;
+package dev.innov8.triple_triad.creature.dtos.requests;
 
-import dev.innov8.triple_triad.common.models.card.*;
-import dev.innov8.triple_triad.common.util.ValidCreatureLevelType;
+import dev.innov8.triple_triad.common.models.card.Creature;
+import dev.innov8.triple_triad.common.models.card.Element;
 import dev.innov8.triple_triad.common.util.Url;
 import dev.innov8.triple_triad.common.web.ResourceRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-@ValidCreatureLevelType
-public class NewCreatureRequest extends ResourceRequest<Creature> {
+public class NewCreatureRequest implements ResourceRequest<Creature> {
 
     @NotBlank
     private String name;
@@ -33,9 +31,6 @@ public class NewCreatureRequest extends ResourceRequest<Creature> {
 
     @Min(1) @Max(10)
     private int level;
-
-    @NotNull
-    private Type type;
 
     private Element element;
 
@@ -99,14 +94,6 @@ public class NewCreatureRequest extends ResourceRequest<Creature> {
         this.level = level;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public Element getElement() {
         return element;
     }
@@ -125,21 +112,20 @@ public class NewCreatureRequest extends ResourceRequest<Creature> {
                 ", leftRank=" + leftRank +
                 ", obverseImageUrl='" + obverseImageUrl + '\'' +
                 ", level=" + level +
-                ", type='" + type + '\'' +
                 ", element='" + element + '\'' +
                 '}';
     }
 
     @Override
     public Creature extract() {
-        return new CreatureBuilder()
+        return new Creature.CreatureBuilder()
                             .setName(name)
                             .setTopRank(topRank)
                             .setRightRank(rightRank)
                             .setBottomRank(bottomRank)
                             .setLeftRank(leftRank)
                             .setImageUrl(obverseImageUrl)
-                            .setType(type)
+                            .setLevel(level)
                             .setElement(element)
                             .build();
     }
