@@ -1,7 +1,9 @@
-package dev.innov8.triple_triad.common.dtos.responses;
+package dev.innov8.triple_triad.card.dtos.responses;
 
+import dev.innov8.triple_triad.user.dtos.responses.UserResponse;
 import dev.innov8.triple_triad.common.models.card.Card;
 import dev.innov8.triple_triad.common.web.ResourceResponse;
+import dev.innov8.triple_triad.creature.dtos.responses.CreatureResponse;
 
 public class CardResponse implements ResourceResponse {
 

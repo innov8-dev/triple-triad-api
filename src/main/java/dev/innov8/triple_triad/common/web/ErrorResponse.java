@@ -1,6 +1,4 @@
-package dev.innov8.triple_triad.common.dtos.responses;
-
-import dev.innov8.triple_triad.common.web.ResourceResponse;
+package dev.innov8.triple_triad.common.web;
 
 import java.time.LocalDateTime;
 

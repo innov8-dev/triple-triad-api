@@ -3,7 +3,8 @@ package dev.innov8.triple_triad.common.models.card;
 import dev.innov8.triple_triad.common.models.Resource;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity(name = "creatures")
@@ -24,8 +25,8 @@ public class Creature extends Resource {
     @Column(name = "left_rank", nullable = false)
     private int leftRank;
 
-    @Column(name = "obverse_image_url", nullable = false)
-    private String obverseImageUrl;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
     @Column(name = "level", nullable = false)
     private int level;
@@ -40,14 +41,14 @@ public class Creature extends Resource {
         super();
     }
 
-    private Creature(String id, String name, int topRank, int rightRank, int bottomRank, int leftRank, String obverseImageUrl, int level, Type type, Element element) {
+    private Creature(String id, String name, int topRank, int rightRank, int bottomRank, int leftRank, String imageUrl, int level, Type type, Element element) {
         this.id = id;
         this.name = name;
         this.topRank = topRank;
         this.rightRank = rightRank;
         this.bottomRank = bottomRank;
         this.leftRank = leftRank;
-        this.obverseImageUrl = obverseImageUrl;
+        this.imageUrl = imageUrl;
         this.level = level;
         this.type = type;
         this.element = element;
@@ -73,8 +74,8 @@ public class Creature extends Resource {
         return leftRank;
     }
 
-    public String getObverseImageUrl() {
-        return obverseImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getLevel() {
@@ -97,7 +98,7 @@ public class Creature extends Resource {
         private int rightRank;
         private int bottomRank;
         private int leftRank;
-        private String obverseImageUrl;
+        private String imageUrl;
         private int level;
         private Type type;
         private Element element;
@@ -132,8 +133,8 @@ public class Creature extends Resource {
             return this;
         }
 
-        public CreatureBuilder setObverseImageUrl(String obverseImageUrl) {
-            this.obverseImageUrl = obverseImageUrl;
+        public CreatureBuilder setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
             return this;
         }
 
@@ -155,7 +156,77 @@ public class Creature extends Resource {
         public Creature build() {
             if (id == null || id.isEmpty()) id = UUID.randomUUID().toString();
             if (element == null) element = Element.NONE;
-            return new Creature(id, this.name, topRank, rightRank, bottomRank, leftRank, obverseImageUrl, level, type, element);
+
+            List<Map<String, Boolean>> illegalStates = new ArrayList<>();
+
+            if (topRank < 1 || topRank > 10) {
+                Map<String, Boolean> illegalTopRank = new HashMap<>();
+                illegalTopRank.put("topRank", true);
+                illegalStates.add(illegalTopRank);
+            }
+
+            if (rightRank < 1 || rightRank > 10) {
+                Map<String, Boolean> illegalRightRank = new HashMap<>();
+                illegalRightRank.put("rightRank", true);
+                illegalStates.add(illegalRightRank);
+            }
+
+            if (bottomRank < 1 || bottomRank > 10) {
+                Map<String, Boolean> illegalBottomRank = new HashMap<>();
+                illegalBottomRank.put("bottomRank", true);
+                illegalStates.add(illegalBottomRank);
+            }
+
+            if (leftRank < 1 || leftRank > 10) {
+                Map<String, Boolean> illegalLeftRank = new HashMap<>();
+                illegalLeftRank.put("leftRank", true);
+                illegalStates.add(illegalLeftRank);
+            }
+
+            if (level < 1 || level > 10) {
+                Map<String, Boolean> illegalLevel = new HashMap<>();
+                illegalLevel.put("level", true);
+                illegalStates.add(illegalLevel);
+            }
+
+            if (imageUrl == null || imageUrl.trim().isEmpty()) {
+                Map<String, Boolean> illegalLevel = new HashMap<>();
+                illegalLevel.put("imageUrl", true);
+                illegalStates.add(illegalLevel);
+            }
+
+            if (!illegalStates.isEmpty()) {
+
+                List<String> states = illegalStates.stream()
+                                                   .flatMap(stateMap -> stateMap.entrySet().stream())
+                                                   .map(Map.Entry::getKey)
+                                                   .collect(Collectors.toList());
+
+                throw new IllegalStateException("Illegal instantiation arguments found for states: " + states);
+
+            }
+
+
+            switch (level) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    type = Type.MONSTER;
+                    break;
+                case 6:
+                case 7:
+                    type = Type.BOSS;
+                    break;
+                case 8:
+                case 9:
+                    type = Type.GF;
+                    break;
+                case 10:
+                    type = Type.PLAYER;
+            }
+            return new Creature(id, this.name, topRank, rightRank, bottomRank, leftRank, imageUrl, level, type, element);
         }
 
     }

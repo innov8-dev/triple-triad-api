@@ -1,11 +1,11 @@
 package dev.innov8.triple_triad.common.services;
 
-import dev.innov8.triple_triad.common.web.AppRequest;
+import dev.innov8.triple_triad.common.web.ResourceRequest;
 import dev.innov8.triple_triad.common.web.ResourceResponse;
 import dev.innov8.triple_triad.common.web.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.models.Resource;
-import dev.innov8.triple_triad.common.util.EntitySearcher;
+import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.Valid;
@@ -54,13 +54,13 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
-    public void save(@Valid AppRequest<T> saveRequest) {
+    public void save(@Valid ResourceRequest<T> saveRequest) {
         T newObj = saveRequest.extract();
         newObj.setId(UUID.randomUUID().toString());
         repo.save(newObj);
     }
 
-    public void update(@Valid AppRequest<T> updateRequest) {
+    public void update(@Valid ResourceRequest<T> updateRequest) {
         T updatedObj = updateRequest.extract();
         repo.save(updatedObj);
     }

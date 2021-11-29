@@ -1,40 +1,41 @@
-package dev.innov8.triple_triad.common.dtos.responses;
+package dev.innov8.triple_triad.creature.dtos.requests;
 
 import dev.innov8.triple_triad.common.models.card.Creature;
-import dev.innov8.triple_triad.common.web.ResourceResponse;
+import dev.innov8.triple_triad.common.models.card.Element;
+import dev.innov8.triple_triad.common.util.Url;
+import dev.innov8.triple_triad.common.web.ResourceRequest;
 
-public class CreatureResponse implements ResourceResponse {
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
-    private String creatureId;
+public class NewCreatureRequest implements ResourceRequest<Creature> {
+
+    @NotBlank
     private String name;
+
+    @Min(1) @Max(10)
     private int topRank;
+
+    @Min(1) @Max(10)
     private int rightRank;
+
+    @Min(1) @Max(10)
     private int bottomRank;
+
+    @Min(1) @Max(10)
     private int leftRank;
+
+    @Url
     private String obverseImageUrl;
+
+    @Min(1) @Max(10)
     private int level;
-    private String type;
-    private String element;
 
-    public CreatureResponse(Creature creature) {
-        this.creatureId = creature.getId();
-        this.name = creature.getName();
-        this.topRank = creature.getTopRank();
-        this.rightRank = creature.getRightRank();
-        this.bottomRank = creature.getBottomRank();
-        this.leftRank = creature.getLeftRank();
-        this.obverseImageUrl = creature.getObverseImageUrl();
-        this.level = creature.getLevel();
-        this.type = creature.getType().toString();
-        this.element = creature.getElement().toString();
-    }
+    private Element element;
 
-    public String getCreatureId() {
-        return creatureId;
-    }
-
-    public void setCreatureId(String creatureId) {
-        this.creatureId = creatureId;
+    public NewCreatureRequest() {
+        super();
     }
 
     public String getName() {
@@ -93,36 +94,39 @@ public class CreatureResponse implements ResourceResponse {
         this.level = level;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getElement() {
+    public Element getElement() {
         return element;
     }
 
-    public void setElement(String element) {
+    public void setElement(Element element) {
         this.element = element;
     }
 
     @Override
     public String toString() {
-        return "CreatureResponse{" +
-                "creatureId='" + creatureId + '\'' +
-                ", name='" + name + '\'' +
+        return "NewCreatureRequest{" +
+                "name='" + name + '\'' +
                 ", topRank=" + topRank +
                 ", rightRank=" + rightRank +
                 ", bottomRank=" + bottomRank +
                 ", leftRank=" + leftRank +
                 ", obverseImageUrl='" + obverseImageUrl + '\'' +
                 ", level=" + level +
-                ", type='" + type + '\'' +
                 ", element='" + element + '\'' +
                 '}';
     }
 
+    @Override
+    public Creature extract() {
+        return new Creature.CreatureBuilder()
+                            .setName(name)
+                            .setTopRank(topRank)
+                            .setRightRank(rightRank)
+                            .setBottomRank(bottomRank)
+                            .setLeftRank(leftRank)
+                            .setImageUrl(obverseImageUrl)
+                            .setLevel(level)
+                            .setElement(element)
+                            .build();
+    }
 }

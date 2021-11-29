@@ -1,6 +1,5 @@
 package dev.innov8.triple_triad.common.web;
 
-import dev.innov8.triple_triad.common.dtos.responses.ErrorResponse;
 import dev.innov8.triple_triad.common.exceptions.InvalidRequestException;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.exceptions.ResourcePersistenceException;
@@ -40,12 +39,12 @@ public class ResourceController<T extends Resource> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody @Valid AppRequest newObj) {
+    public void save(@RequestBody @Valid ResourceRequest<T> newObj) {
         service.save(newObj);
     }
 
-    @PatchMapping("/{id}")
-    public void update(@RequestBody @Valid AppRequest updatedObj) {
+    @PatchMapping
+    public void update(@RequestBody @Valid ResourceRequest<T> updatedObj) {
         service.update(updatedObj);
     }
 
