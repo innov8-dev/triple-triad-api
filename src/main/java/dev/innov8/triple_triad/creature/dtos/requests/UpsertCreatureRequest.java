@@ -9,7 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-public class NewCreatureRequest implements ResourceRequest<Creature> {
+public class UpsertCreatureRequest implements ResourceRequest<Creature> {
 
     @NotBlank
     private String name;
@@ -34,7 +34,7 @@ public class NewCreatureRequest implements ResourceRequest<Creature> {
 
     private Element element;
 
-    public NewCreatureRequest() {
+    public UpsertCreatureRequest() {
         super();
     }
 
