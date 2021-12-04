@@ -1,12 +1,14 @@
 package dev.innov8.triple_triad.creature.dtos.requests;
 
+import dev.innov8.triple_triad.common.models.card.Creature;
 import dev.innov8.triple_triad.common.models.card.Element;
+import dev.innov8.triple_triad.common.web.ResourceRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-public class UpdateCreatureRequest {
+public class UpdateCreatureRequest implements ResourceRequest<Creature> {
 
     @NotBlank
     private String id;
@@ -31,6 +33,8 @@ public class UpdateCreatureRequest {
     private int level;
 
     private Element element;
+
+    private String requestingUserId;
 
     public String getId() {
         return id;
@@ -104,6 +108,14 @@ public class UpdateCreatureRequest {
         this.element = element;
     }
 
+    public String getRequestingUserId() {
+        return requestingUserId;
+    }
+
+    public void setRequestingUserId(String requestingUserId) {
+        this.requestingUserId = requestingUserId;
+    }
+
     @Override
     public String toString() {
         return "UpdateCreatureRequest{" +
@@ -116,7 +128,23 @@ public class UpdateCreatureRequest {
                 ", obverseImageUrl='" + obverseImageUrl + '\'' +
                 ", level=" + level +
                 ", element=" + element +
+                ", requestingUserId='" + requestingUserId + '\'' +
                 '}';
     }
 
+    @Override
+    public Creature extract() {
+        System.out.println("HERE 2 >>>>>>>>>>>>>>> " + this);
+        Creature creature = new Creature();
+        creature.setId(id);
+        creature.setName(name)
+                .setTopRank(topRank)
+                .setRightRank(rightRank)
+                .setBottomRank(bottomRank)
+                .setLeftRank(leftRank)
+                .setImageUrl(obverseImageUrl)
+                .setLevel(level)
+                .setElement(element);
+        return creature;
+    }
 }

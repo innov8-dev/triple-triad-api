@@ -1,5 +1,7 @@
 package dev.innov8.triple_triad.common.web;
 
-public interface ResourceResponse {
+import java.io.Serializable;
+
+public interface ResourceResponse extends Serializable {
 
 }

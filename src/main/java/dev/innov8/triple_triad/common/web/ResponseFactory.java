@@ -15,8 +15,6 @@ public class ResponseFactory {
     }
 
     public static ResourceResponse buildResponse(String type, Resource resource) {
-        System.out.println("RESOURCE: " + resource);
-        System.out.println("TYPE: " + type);
         switch (type) {
             case "AppUser":
                 return new UserResponse((AppUser) resource);

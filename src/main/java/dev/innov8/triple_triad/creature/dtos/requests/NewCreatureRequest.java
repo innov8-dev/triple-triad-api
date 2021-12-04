@@ -27,7 +27,7 @@ public class NewCreatureRequest implements ResourceRequest<Creature> {
     private int leftRank;
 
     @Url
-    private String obverseImageUrl;
+    private String imageUrl;
 
     @Min(1) @Max(10)
     private int level;
@@ -78,12 +78,12 @@ public class NewCreatureRequest implements ResourceRequest<Creature> {
         this.leftRank = leftRank;
     }
 
-    public String getObverseImageUrl() {
-        return obverseImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setObverseImageUrl(String obverseImageUrl) {
-        this.obverseImageUrl = obverseImageUrl;
+    public void setImageUrl(String obverseImageUrl) {
+        this.imageUrl = obverseImageUrl;
     }
 
     public int getLevel() {
@@ -110,7 +110,7 @@ public class NewCreatureRequest implements ResourceRequest<Creature> {
                 ", rightRank=" + rightRank +
                 ", bottomRank=" + bottomRank +
                 ", leftRank=" + leftRank +
-                ", obverseImageUrl='" + obverseImageUrl + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", level=" + level +
                 ", element='" + element + '\'' +
                 '}';
@@ -118,15 +118,14 @@ public class NewCreatureRequest implements ResourceRequest<Creature> {
 
     @Override
     public Creature extract() {
-        return new Creature.CreatureBuilder()
-                            .setName(name)
-                            .setTopRank(topRank)
-                            .setRightRank(rightRank)
-                            .setBottomRank(bottomRank)
-                            .setLeftRank(leftRank)
-                            .setImageUrl(obverseImageUrl)
-                            .setLevel(level)
-                            .setElement(element)
-                            .build();
+        return new Creature()
+                        .setName(name)
+                        .setTopRank(topRank)
+                        .setRightRank(rightRank)
+                        .setBottomRank(bottomRank)
+                        .setLeftRank(leftRank)
+                        .setImageUrl(imageUrl)
+                        .setLevel(level)
+                        .setElement(element);
     }
 }

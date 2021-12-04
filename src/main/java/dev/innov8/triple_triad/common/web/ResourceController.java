@@ -41,8 +41,8 @@ public class ResourceController<T extends Resource> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody @Valid ResourceRequest<T> newObj) {
-        service.save(newObj);
+    public NewResourceCreationResponse save(@RequestBody @Valid ResourceRequest<T> newObj) {
+        return service.save(newObj);
     }
 
     @PatchMapping
@@ -59,6 +59,7 @@ public class ResourceController<T extends Resource> {
     @ExceptionHandler({InvalidRequestException.class, MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidRequestException(Exception e) {
+        e.printStackTrace();
         return new ErrorResponse(400, e.getMessage());
     }
 
