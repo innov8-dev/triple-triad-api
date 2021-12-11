@@ -134,7 +134,6 @@ public class UpdateCreatureRequest implements ResourceRequest<Creature> {
 
     @Override
     public Creature extract() {
-        System.out.println("HERE 2 >>>>>>>>>>>>>>> " + this);
         Creature creature = new Creature();
         creature.setId(id);
         creature.setName(name)
