@@ -2,11 +2,15 @@ package dev.innov8.triple_triad.common.models.card;
 
 import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.models.user.AppUser;
+import dev.innov8.triple_triad.common.util.RestResource;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Component
+@RestResource
 @Table(
     name = "decks",
     uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "owner_id" }) }

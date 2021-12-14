@@ -55,6 +55,7 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
 
         Resource resource = (Resource) bean;
         String baseBeanName = bean.getClass().getSimpleName().substring(0, 1).toLowerCase() + bean.getClass().getSimpleName().substring(1) + "s";
+        System.out.println("Generating repository, service, and controller classes for resource: " + baseBeanName);
         System.out.println(baseBeanName);
         ResourceRepository<? extends Resource> resourceRepo = createAndRegisterResourceRepository(resource.getClass(), baseBeanName);
         ResourceService<? extends Resource> resourceService = createAndRegisterResourceService(resource.getClass(), resourceRepo, baseBeanName);

@@ -1,11 +1,16 @@
 package dev.innov8.triple_triad.common.models.card;
 
 import dev.innov8.triple_triad.common.models.Resource;
+import dev.innov8.triple_triad.common.util.RestResource;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.*;
 
-@Entity(name = "creatures")
+@Entity
+@Component
+@RestResource
+@Table(name = "creatures")
 public class Creature extends Resource {
 
     @Column(name = "name", nullable = false)
