@@ -1,11 +1,11 @@
 package dev.innov8.triple_triad.common.services;
 
-import dev.innov8.triple_triad.common.web.ResourceCreationResponse;
-import dev.innov8.triple_triad.common.web.ResourceRequest;
-import dev.innov8.triple_triad.common.web.ResourceResponse;
-import dev.innov8.triple_triad.common.web.ResponseFactory;
+import dev.innov8.triple_triad.common.web.dtos.responses.ResourceCreationResponse;
+import dev.innov8.triple_triad.common.web.dtos.requests.ResourceRequest;
+import dev.innov8.triple_triad.common.web.dtos.responses.ResourceResponse;
+import dev.innov8.triple_triad.common.web.dtos.responses.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
-import dev.innov8.triple_triad.common.models.Resource;
+import dev.innov8.triple_triad.models.Resource;
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import org.springframework.data.repository.CrudRepository;
 

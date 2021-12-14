@@ -2,7 +2,7 @@ package dev.innov8.triple_triad.common.util;
 
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import dev.innov8.triple_triad.common.datasource.ResourceRepository;
-import dev.innov8.triple_triad.common.models.Resource;
+import dev.innov8.triple_triad.models.Resource;
 import dev.innov8.triple_triad.common.services.ResourceService;
 import dev.innov8.triple_triad.common.web.ResourceController;
 import lombok.SneakyThrows;
@@ -25,7 +25,6 @@ import javax.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 @Component
 @SuppressWarnings({"unchecked"})
@@ -51,12 +50,8 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
             return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
         }
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
         Resource resource = (Resource) bean;
         String baseBeanName = bean.getClass().getSimpleName().substring(0, 1).toLowerCase() + bean.getClass().getSimpleName().substring(1) + "s";
-        System.out.println("Generating repository, service, and controller classes for resource: " + baseBeanName);
-        System.out.println(baseBeanName);
         ResourceRepository<? extends Resource> resourceRepo = createAndRegisterResourceRepository(resource.getClass(), baseBeanName);
         ResourceService<? extends Resource> resourceService = createAndRegisterResourceService(resource.getClass(), resourceRepo, baseBeanName);
         createAndRegisterResourceController(bean.getClass(), resourceService, baseBeanName);

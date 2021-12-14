@@ -1,16 +1,6 @@
 package dev.innov8.triple_triad.common.datasource;
 
-import dev.innov8.triple_triad.common.models.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootVersion;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -19,6 +9,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+
+// TODO implement methods
 
 public class ResourceRepository<T> implements CrudRepository<T, String> {
 
@@ -32,7 +24,6 @@ public class ResourceRepository<T> implements CrudRepository<T, String> {
 
     @Override
     public List<T> findAll() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>||<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(resourceType);
         Root<T> rootEntry = cq.from(resourceType);
