@@ -5,14 +5,14 @@ import dev.innov8.triple_triad.common.services.ResourceService;
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserService extends ResourceService<AppUser> {
+//@Service
+public class UserService /*extends ResourceService<AppUser>*/ {
 
-    private final UserRepository userRepo;
-
-    public UserService(UserRepository userRepo, EntitySearcher entitySearcher) {
-        super(userRepo, entitySearcher);
-        this.userRepo = userRepo;
-    }
+//    private final UserRepository userRepo;
+//
+//    public UserService(UserRepository userRepo, EntitySearcher entitySearcher) {
+//        super(userRepo, entitySearcher);
+//        this.userRepo = userRepo;
+//    }
 
 }

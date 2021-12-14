@@ -18,3 +18,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "health"
+          - "beans"
+          - "info"
+          - "mappings"

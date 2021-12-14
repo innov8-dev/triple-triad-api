@@ -1,11 +1,15 @@
 package dev.innov8.triple_triad.common.models.user;
 
 import dev.innov8.triple_triad.common.models.Resource;
+import dev.innov8.triple_triad.common.util.RestResource;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Component
+@RestResource
 @Table(name = "app_users")
 public class AppUser extends Resource {
 

@@ -1,14 +1,14 @@
 package dev.innov8.triple_triad.common.web;
 
-public class NewResourceCreationResponse {
+public class ResourceCreationResponse {
 
     private String id;
 
-    public NewResourceCreationResponse() {
+    public ResourceCreationResponse() {
         super();
     }
 
-    public NewResourceCreationResponse(String id) {
+    public ResourceCreationResponse(String id) {
         this.id = id;
     }
 

@@ -41,7 +41,7 @@ public class ResourceController<T extends Resource> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public NewResourceCreationResponse save(@RequestBody @Valid ResourceRequest<T> newObj) {
+    public ResourceCreationResponse save(@RequestBody @Valid ResourceRequest<T> newObj) {
         return service.save(newObj);
     }
 

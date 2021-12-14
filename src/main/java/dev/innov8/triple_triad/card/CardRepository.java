@@ -6,7 +6,7 @@ import dev.innov8.triple_triad.common.models.card.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Set;
 
-public interface CardRepository extends JpaRepository<Card, String> {
+public interface CardRepository /*extends JpaRepository<Card, String>*/ {
 
     Set<Card> findCardsByCreatureName(String name);
     Set<Card> findCardsByCreatureLevel(int level);

@@ -1,13 +1,13 @@
 package dev.innov8.triple_triad.common.services;
 
-import dev.innov8.triple_triad.common.web.NewResourceCreationResponse;
+import dev.innov8.triple_triad.common.web.ResourceCreationResponse;
 import dev.innov8.triple_triad.common.web.ResourceRequest;
 import dev.innov8.triple_triad.common.web.ResourceResponse;
 import dev.innov8.triple_triad.common.web.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.common.models.Resource;
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import javax.validation.Valid;
 import java.lang.reflect.Field;
@@ -18,17 +18,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked"})
-public abstract class ResourceService<T extends Resource> {
+public class ResourceService<T extends Resource> {
 
-    protected final JpaRepository<T, String> repo;
+    protected final CrudRepository<T, String> repo;
     private final EntitySearcher entitySearcher;
     private final Class<? extends Resource> resourceType;
     private final String resourceSimpleName;
 
-    public ResourceService(JpaRepository<T, String> repo, EntitySearcher entitySearcher) {
+    public ResourceService(CrudRepository<T, String> repo, EntitySearcher entitySearcher) {
         this.repo = repo;
         this.entitySearcher = entitySearcher;
-        this.resourceType = (Class<? extends Resource>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.resourceType = (Class<? extends Resource>) ((ParameterizedType) repo.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         this.resourceSimpleName = resourceType.getSimpleName();
     }
 
@@ -42,9 +42,9 @@ public abstract class ResourceService<T extends Resource> {
     }
 
     public List<? extends ResourceResponse> findAll() {
-        return repo.findAll()
+        return ((Collection<?>) repo.findAll())
                    .stream()
-                   .map(resource -> ResponseFactory.buildResponse(resourceSimpleName, resource))
+                   .map(resource -> ResponseFactory.buildResponse(resourceSimpleName, (Resource) resource))
                    .collect(Collectors.toList());
     }
 
@@ -55,11 +55,11 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
-    public NewResourceCreationResponse save(@Valid ResourceRequest<T> saveRequest) {
+    public ResourceCreationResponse save(@Valid ResourceRequest<T> saveRequest) {
         T newObj = saveRequest.extract();
         newObj.setId(UUID.randomUUID().toString());
         repo.save(newObj);
-        return new NewResourceCreationResponse(newObj.getId());
+        return new ResourceCreationResponse(newObj.getId());
     }
 
     public void update(@Valid ResourceRequest<T> updateRequest) {
