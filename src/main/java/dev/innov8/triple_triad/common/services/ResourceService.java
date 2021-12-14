@@ -1,5 +1,7 @@
 package dev.innov8.triple_triad.common.services;
 
+import dev.innov8.triple_triad.common.datasource.ResourceRepository;
+import dev.innov8.triple_triad.common.util.Reflector;
 import dev.innov8.triple_triad.common.web.dtos.responses.ResourceCreationResponse;
 import dev.innov8.triple_triad.common.web.dtos.requests.ResourceRequest;
 import dev.innov8.triple_triad.common.web.dtos.responses.ResourceResponse;
@@ -7,8 +9,17 @@ import dev.innov8.triple_triad.common.web.dtos.responses.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.models.Resource;
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
+import org.hibernate.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityTransaction;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,17 +28,21 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static dev.innov8.triple_triad.common.util.Reflector.*;
+
 @SuppressWarnings({"unchecked"})
 public class ResourceService<T extends Resource> {
 
-    protected final CrudRepository<T, String> repo;
+    protected final ResourceRepository<T> repo;
     private final EntitySearcher entitySearcher;
+    private final PlatformTransactionManager txManager;
     private final Class<? extends Resource> resourceType;
     private final String resourceSimpleName;
 
-    public ResourceService(CrudRepository<T, String> repo, EntitySearcher entitySearcher) {
+    public ResourceService(ResourceRepository<T> repo, EntitySearcher entitySearcher, PlatformTransactionManager txManager) {
         this.repo = repo;
         this.entitySearcher = entitySearcher;
+        this.txManager = txManager;
         this.resourceType = (Class<? extends Resource>) ((ParameterizedType) repo.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         this.resourceSimpleName = resourceType.getSimpleName();
     }
@@ -56,61 +71,48 @@ public class ResourceService<T extends Resource> {
     }
 
     public ResourceCreationResponse save(@Valid ResourceRequest<T> saveRequest) {
+        TransactionStatus tx = txManager.getTransaction(TransactionDefinition.withDefaults());
         T newObj = saveRequest.extract();
         newObj.setId(UUID.randomUUID().toString());
-        repo.save(newObj);
+        repo.saveAndFlush(newObj);
+        txManager.commit(tx);
+        repo.clear();
+        System.out.println("IS TX COMPLETE: " + tx.isCompleted());
         return new ResourceCreationResponse(newObj.getId());
     }
 
     public void update(@Valid ResourceRequest<T> updateRequest) {
 
+        TransactionStatus tx = txManager.getTransaction(TransactionDefinition.withDefaults());
         T updatedObj = updateRequest.extract();
         T originalRecord = repo.findById(updatedObj.getId()).orElseThrow(ResourceNotFoundException::new);
 
         Arrays.stream(resourceType.getDeclaredFields())
               .flatMap(field -> {
-                  try {
-                      Map<String, Object> fieldMap = new HashMap<>();
-                      Method getter = getFieldAccessorMethod(field);
-                      fieldMap.put(field.getName(), getter.invoke(updatedObj));
-                      return fieldMap.entrySet().stream();
-                  } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                      throw new RuntimeException("An unexpected exception occurred during resource update", e);
-                  }
+                  Map<String, Object> fieldMap = new HashMap<>();
+                  fieldMap.put(field.getName(), getObjectFieldValue(updatedObj, field));
+                  return fieldMap.entrySet().stream();
               })
-              .filter(entry -> entry.getValue() == null || entry.getValue().equals(0))
+              .filter(entry -> entry.getValue() != null && !entry.getValue().equals(0))
               .forEach(entry -> {
                   try {
                       Field field = resourceType.getDeclaredField(entry.getKey());
-                      Method getter = getFieldAccessorMethod(field);
-                      Method setter = getFieldMutatorMethod(field);
-                      Object originalFieldValue = getter.invoke(originalRecord);
-                      setter.invoke(updatedObj, originalFieldValue);
-                  } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                      invokeMethod(getMutatorForField(resourceType, field), originalRecord, getObjectFieldValue(updatedObj, field));
+                  } catch (Exception e) {
                       e.printStackTrace();
+                      txManager.rollback(tx);
+                      repo.clear();
                   }
               });
 
-        repo.save(updatedObj);
+        txManager.commit(tx);
+        repo.clear();
 
     }
 
+    @Transactional
     public void deleteById(String id) {
         repo.deleteById(id);
-    }
-
-    private Method getFieldAccessorMethod(Field field) throws NoSuchMethodException {
-        return resourceType.getDeclaredMethod("get" + upperCaseFirstLetter(field.getName()));
-    }
-
-    private Method getFieldMutatorMethod(Field field) throws NoSuchMethodException {
-        return resourceType.getDeclaredMethod("set" + upperCaseFirstLetter(field.getName()), field.getType());
-    }
-
-    private String upperCaseFirstLetter(String str) {
-        if (str == null || str.isEmpty()) return str;
-        if (str.length() == 1) return str.toUpperCase();
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
 }

@@ -13,10 +13,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -60,6 +62,7 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     }
 
     private <T extends Resource> ResourceRepository<T> createAndRegisterResourceRepository(Class<T> resourceType, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        System.out.println("Generating ResourceRepository implementation for resource with name: " + baseBeanName);
         EntityManager entityManager = configurableAppContainer.getBean(EntityManager.class);
         ResourceRepository<T> resourceRepo = (ResourceRepository<T>) new ByteBuddy()
                                                 .subclass(TypeDescription.Generic.Builder.parameterizedType(ResourceRepository.class, resourceType).build())
@@ -76,7 +79,9 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     }
 
     private <T extends Resource> ResourceService<T> createAndRegisterResourceService(Class<? extends Resource> resourceType, ResourceRepository<? extends Resource> resourceRepo, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        EntitySearcher entitySearcher = configurableAppContainer.getBean("entitySearcher", EntitySearcher.class);
+        System.out.println("Generating ResourceService implementation for resource with name: " + baseBeanName);
+        EntitySearcher entitySearcher = configurableAppContainer.getBean(EntitySearcher.class);
+        PlatformTransactionManager txManager = configurableAppContainer.getBean(PlatformTransactionManager.class);
         ResourceService<T> resourceService = new ByteBuddy()
                                                 .subclass(ResourceService.class)
                                                 .name(baseBeanName + "Service")
@@ -84,15 +89,15 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
                                                 .make()
                                                 .load(getClass().getClassLoader())
                                                 .getLoaded()
-                                                .getConstructor(CrudRepository.class, EntitySearcher.class)
-                                                .newInstance(resourceRepo, entitySearcher);
+                                                .getConstructor(ResourceRepository.class, EntitySearcher.class, PlatformTransactionManager.class)
+                                                .newInstance(resourceRepo, entitySearcher, txManager);
 
         configurableAppContainer.getBeanFactory().registerSingleton(baseBeanName + "Service", resourceService);
         return resourceService;
     }
 
     private <T extends Resource> void createAndRegisterResourceController(Class<?> resourceType, ResourceService<? extends Resource> resourceService, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-
+        System.out.println("Generating ResourceController implementation for resource with name: " + baseBeanName);
         ResourceController<T> resourceController = new ByteBuddy()
                                                         .subclass(ResourceController.class)
                                                         .name(baseBeanName + "Controller")
@@ -106,74 +111,73 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
 
         configurableAppContainer.getBeanFactory().registerSingleton(baseBeanName + "Controller", resourceController);
 
-        RequestMappingHandlerMapping handlerMapping = configurableAppContainer.getBean(RequestMappingHandlerMapping.class);
-
-        for (Method controllerMethod : resourceController.getClass().getDeclaredMethods()) {
-
-            RequestMappingInfo requestMappingInfo = null;
-
-            if (controllerMethod.isAnnotationPresent(GetMapping.class)) {
-                GetMapping anno = controllerMethod.getAnnotation(GetMapping.class);
-                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
-            } else if (controllerMethod.isAnnotationPresent(PostMapping.class)) {
-                PostMapping anno = controllerMethod.getAnnotation(PostMapping.class);
-                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
-            } else if (controllerMethod.isAnnotationPresent(PatchMapping.class)) {
-                PatchMapping anno = controllerMethod.getAnnotation(PatchMapping.class);
-                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
-            } else if (controllerMethod.isAnnotationPresent(DeleteMapping.class)) {
-                DeleteMapping anno = controllerMethod.getAnnotation(DeleteMapping.class);
-                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
-            }
-
-            handlerMapping.registerMapping(requestMappingInfo, resourceController, controllerMethod);
-
-        }
-
-    }
-
-    private RequestMappingInfo mapAnnotationToRequestMappingInfo(Annotation annotation) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        if (annotation instanceof GetMapping) {
-            GetMapping anno = (GetMapping) annotation;
-            return RequestMappingInfo.paths(anno.value())
-                                     .methods(RequestMethod.GET)
-                                     .produces(anno.produces())
-                                     .consumes(anno.consumes())
-                                     .headers(anno.headers())
-                                     .params(anno.params())
-                                     .build();
-        } else if (annotation instanceof PostMapping) {
-            PostMapping anno = (PostMapping) annotation;
-            return RequestMappingInfo.paths(anno.value())
-                                     .methods(RequestMethod.POST)
-                                     .produces(anno.produces())
-                                     .consumes(anno.consumes())
-                                     .headers(anno.headers())
-                                     .params(anno.params())
-                                     .build();
-        } else if (annotation instanceof PatchMapping) {
-            PatchMapping anno = (PatchMapping) annotation;
-            return RequestMappingInfo.paths(anno.value())
-                                     .methods(RequestMethod.PATCH)
-                                     .produces(anno.produces())
-                                     .consumes(anno.consumes())
-                                     .headers(anno.headers())
-                                     .params(anno.params())
-                                     .build();
-        } else if (annotation instanceof DeleteMapping) {
-            DeleteMapping anno = (DeleteMapping) annotation;
-            return RequestMappingInfo.paths(anno.value())
-                                     .methods(RequestMethod.DELETE)
-                                     .produces(anno.produces())
-                                     .consumes(anno.consumes())
-                                     .headers(anno.headers())
-                                     .params(anno.params())
-                                     .build();
-        } else {
-            throw new RuntimeException("Unexpected annotation provided.");
-        }
+//        RequestMappingHandlerMapping handlerMapping = configurableAppContainer.getBean(RequestMappingHandlerMapping.class);
+//
+//        for (Method controllerMethod : resourceController.getClass().getDeclaredMethods()) {
+//
+//            RequestMappingInfo requestMappingInfo = null;
+//
+//            if (controllerMethod.isAnnotationPresent(GetMapping.class)) {
+//                GetMapping anno = controllerMethod.getAnnotation(GetMapping.class);
+//                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
+//            } else if (controllerMethod.isAnnotationPresent(PostMapping.class)) {
+//                PostMapping anno = controllerMethod.getAnnotation(PostMapping.class);
+//                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
+//            } else if (controllerMethod.isAnnotationPresent(PatchMapping.class)) {
+//                PatchMapping anno = controllerMethod.getAnnotation(PatchMapping.class);
+//                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
+//            } else if (controllerMethod.isAnnotationPresent(DeleteMapping.class)) {
+//                DeleteMapping anno = controllerMethod.getAnnotation(DeleteMapping.class);
+//                requestMappingInfo = mapAnnotationToRequestMappingInfo(anno);
+//            }
+//
+//            handlerMapping.registerMapping(requestMappingInfo, resourceController, controllerMethod);
+//
+//        }
 
     }
+
+//    private RequestMappingInfo mapAnnotationToRequestMappingInfo(Annotation annotation) {
+//        if (annotation instanceof GetMapping) {
+//            GetMapping anno = (GetMapping) annotation;
+//            return RequestMappingInfo.paths(anno.value())
+//                                     .methods(RequestMethod.GET)
+//                                     .produces(anno.produces())
+//                                     .consumes(anno.consumes())
+//                                     .headers(anno.headers())
+//                                     .params(anno.params())
+//                                     .build();
+//        } else if (annotation instanceof PostMapping) {
+//            PostMapping anno = (PostMapping) annotation;
+//            return RequestMappingInfo.paths(anno.value())
+//                                     .methods(RequestMethod.POST)
+//                                     .produces(anno.produces())
+//                                     .consumes(anno.consumes())
+//                                     .headers(anno.headers())
+//                                     .params(anno.params())
+//                                     .build();
+//        } else if (annotation instanceof PatchMapping) {
+//            PatchMapping anno = (PatchMapping) annotation;
+//            return RequestMappingInfo.paths(anno.value())
+//                                     .methods(RequestMethod.PATCH)
+//                                     .produces(anno.produces())
+//                                     .consumes(anno.consumes())
+//                                     .headers(anno.headers())
+//                                     .params(anno.params())
+//                                     .build();
+//        } else if (annotation instanceof DeleteMapping) {
+//            DeleteMapping anno = (DeleteMapping) annotation;
+//            return RequestMappingInfo.paths(anno.value())
+//                                     .methods(RequestMethod.DELETE)
+//                                     .produces(anno.produces())
+//                                     .consumes(anno.consumes())
+//                                     .headers(anno.headers())
+//                                     .params(anno.params())
+//                                     .build();
+//        } else {
+//            throw new RuntimeException("Unexpected annotation provided.");
+//        }
+//
+//    }
 
 }
