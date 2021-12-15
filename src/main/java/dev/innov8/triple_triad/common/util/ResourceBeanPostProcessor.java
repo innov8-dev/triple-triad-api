@@ -9,6 +9,8 @@ import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.type.TypeDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -26,6 +28,8 @@ import java.lang.reflect.InvocationTargetException;
 @SuppressWarnings({"unchecked"})
 public class ResourceBeanPostProcessor implements BeanPostProcessor {
 
+    private final static Logger logger = LoggerFactory.getLogger(ResourceBeanPostProcessor.class);
+
     private final ConfigurableApplicationContext configurableAppContainer;
 
     @Autowired
@@ -37,7 +41,6 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
-        // Skip if bean is not annotated with @RestRepository
         if (!bean.getClass().isAnnotationPresent(RestResource.class)) {
             return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
         }
@@ -45,6 +48,8 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
         if (!(bean instanceof Resource)) {
             return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
         }
+
+        logger.info("RestResource bean detected: {}", bean.getClass().getName());
 
         Resource resource = (Resource) bean;
         String baseBeanName = bean.getClass().getSimpleName().substring(0, 1).toLowerCase() + bean.getClass().getSimpleName().substring(1) + "s";
@@ -56,7 +61,7 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     }
 
     private <T extends Resource> ResourceRepository<T> createAndRegisterResourceRepository(Class<T> resourceType, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        System.out.println("Generating ResourceRepository implementation for resource with name: " + baseBeanName);
+        logger.info("Generating ResourceRepository implementation for resource with name: {}", baseBeanName);
         EntityManager entityManager = configurableAppContainer.getBean(EntityManager.class);
         ResourceRepository<T> resourceRepo = (ResourceRepository<T>) new ByteBuddy()
                                                 .subclass(TypeDescription.Generic.Builder.parameterizedType(ResourceRepository.class, resourceType).build())
@@ -73,7 +78,7 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     }
 
     private <T extends Resource> ResourceService<T> createAndRegisterResourceService(Class<? extends Resource> resourceType, ResourceRepository<? extends Resource> resourceRepo, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        System.out.println("Generating ResourceService implementation for resource with name: " + baseBeanName);
+        logger.info("Generating ResourceService implementation for resource with name: {}", baseBeanName);
         EntitySearcher entitySearcher = configurableAppContainer.getBean(EntitySearcher.class);
         PlatformTransactionManager txManager = configurableAppContainer.getBean(PlatformTransactionManager.class);
         ResourceService<T> resourceService = new ByteBuddy()
@@ -91,7 +96,7 @@ public class ResourceBeanPostProcessor implements BeanPostProcessor {
     }
 
     private <T extends Resource> void createAndRegisterResourceController(Class<?> resourceType, ResourceService<? extends Resource> resourceService, String baseBeanName) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        System.out.println("Generating ResourceController implementation for resource with name: " + baseBeanName);
+        logger.info("Generating ResourceController implementation for resource with name: {}", baseBeanName);
         ResourceController<T> resourceController = new ByteBuddy()
                                                         .subclass(ResourceController.class)
                                                         .name(baseBeanName + "Controller")
