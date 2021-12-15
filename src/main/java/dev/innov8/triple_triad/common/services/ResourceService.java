@@ -1,7 +1,6 @@
 package dev.innov8.triple_triad.common.services;
 
 import dev.innov8.triple_triad.common.datasource.ResourceRepository;
-import dev.innov8.triple_triad.common.util.Reflector;
 import dev.innov8.triple_triad.common.web.dtos.responses.ResourceCreationResponse;
 import dev.innov8.triple_triad.common.web.dtos.requests.ResourceRequest;
 import dev.innov8.triple_triad.common.web.dtos.responses.ResourceResponse;
@@ -9,21 +8,13 @@ import dev.innov8.triple_triad.common.web.dtos.responses.ResponseFactory;
 import dev.innov8.triple_triad.common.exceptions.ResourceNotFoundException;
 import dev.innov8.triple_triad.models.Resource;
 import dev.innov8.triple_triad.common.datasource.EntitySearcher;
-import org.hibernate.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityTransaction;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
